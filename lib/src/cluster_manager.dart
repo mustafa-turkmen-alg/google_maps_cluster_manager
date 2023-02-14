@@ -29,7 +29,7 @@ class ClusterManager<T extends ClusterItem> {
         assert(levels.length <= precision);
 
   /// Method to build markers
-  final Future<Marker> Function(Cluster<T>) markerBuilder;
+  final Future<List<Marker>> Function(Cluster<T>) markerBuilder;
 
   // Num of Items to switch from MAX_DIST algo to GEOHASH
   final int maxItemsForMaxDistAlgo;
