@@ -18,7 +18,7 @@ class MaxDistParams {
 
 class ClusterManager<T extends ClusterItem> {
   ClusterManager(this._items, this.updateMarkers,
-      {Future<Marker> Function(Cluster<T>)? markerBuilder,
+      {Future<List<Marker>> Function(Cluster<T>)? markerBuilder,
       this.levels = const [1, 4.25, 6.75, 8.25, 11.5, 14.5, 16.0, 16.5, 20.0],
       this.extraPercent = 0.5,
       this.maxItemsForMaxDistAlgo = 200,
@@ -79,12 +79,24 @@ class ClusterManager<T extends ClusterItem> {
   }
 
   void _updateClusters() async {
-    List<Cluster<T>> mapMarkers = await getMarkers();
 
     final Set<Marker> markers =
-        Set.from(await Future.wait(mapMarkers.map((m) => markerBuilder(m))));
+        Set.from(await Future.wait(getSettedMarker()));
 
     updateMarkers(markers);
+  }
+
+  Iterable<Marker> getSettedMarker(){
+    List<Cluster<T>> mapMarkers = await getMarkers();
+
+    var tempMarkerList = <Marker>[];
+
+    for(var m in mapMarkers){
+      tempMarkerList.addAll(markerBuilder(m));
+    }
+
+    return tempMarkerList;
+
   }
 
   /// Update all cluster items
